@@ -21,10 +21,10 @@ char names[14] = { '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K',
 char suits[5] = { 'D', 'H', 'C', 'S' };
 int scores[13] = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 1 };
 
-
 void fillDeck(void);
 void printDeck();
 void shuffleDeck();
+void checkDeck();
 
 int main(void) {
 	fillDeck();
@@ -35,10 +35,14 @@ int main(void) {
 	/*printDeck();*/
 	shuffleDeck();
 	printDeck();
+	checkDeck();
 	return 0;
 }
 void fillDeck() {
-	int counterdeck = 0, countersuits = 0, counterscores = 0, counternames = 0;
+	int counterdeck = 0;
+	int countersuits = 0;
+	int counterscores = 0;
+	int counternames = 0;
 	for (counterdeck = 0; counterdeck < deckSize; counterdeck++) {
 		deck[counterdeck].suit[0] = suits[countersuits];
 		countersuits++;
@@ -85,9 +89,30 @@ void shuffleDeck() {
 	}
 
 }
+void checkDeck() {
+	int counter, testingscore;
+	int suitcounter = 0;
+	int scorecounter = 0;
+	char choice;
+	printf("-----------8888888888888888888888888----------------------\n");
+	printf("Please add card suit D, C, H or S ");
+	scanf("%c", &choice);
+	printf("The choice is %c", choice);
 
+	for (counter = 0; counter < deckSize; counter++) {
+		if (deck[counter].suit[0] == choice) {
+			suitcounter = suitcounter + 1;
 
+		}
+	}
+	printf("The number of cards of the suit - %i\n", suitcounter);
+	printf("Please add card score  ");
+	scanf("%i", &testingscore);
+	for (counter = 0; counter < deckSize; counter++) {
+		if (deck[counter].score == testingscore) {
+			scorecounter = scorecounter + 1;
+		}
+	}
+	printf("The number of cards with you score is %i\n", scorecounter);
 
-
-
-
+}
