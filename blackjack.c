@@ -7,6 +7,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include<time.h>
 const int deckSize = 52;
 
 struct cards {
@@ -20,6 +21,7 @@ char names[14] = { '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K',
 char suits[5] = { 'D', 'H', 'C', 'S' };
 int scores[13] = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 1 };
 
+
 void fillDeck(void);
 void printDeck();
 void shuffleDeck();
@@ -30,6 +32,8 @@ int main(void) {
 	printf("%s,%s,%i\n", deck[0].suit, deck[0].name, deck[0].score);
 	printf("----------------------------------------------------\n");
 	printf("----------------------------------------------------\n");
+	/*printDeck();*/
+	shuffleDeck();
 	printDeck();
 	return 0;
 }
@@ -66,4 +70,24 @@ void printDeck() {
 
 	}
 }
+void shuffleDeck() {
+	int shuffletime, index1, index2, counter;
+	struct cards container;
+	srand(time(NULL));
+	shuffletime = (rand() % 100000);
+	printf("%i\n", shuffletime);
+	for (counter = 0; counter < shuffletime; counter++) {
+		index1 = (rand() % 52);
+		index2 = (rand() % 52);
+		container = deck[index1];
+		deck[index1] = deck[index2];
+		deck[index2] = container;
+	}
+
+}
+
+
+
+
+
 
