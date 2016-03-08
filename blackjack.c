@@ -8,6 +8,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<time.h>
+#include<alloca.h>
 const int deckSize = 52;
 
 struct cards {
@@ -16,6 +17,10 @@ struct cards {
 	int score;
 };
 struct cards deck[52];
+
+
+struct cards *playerHand = calloc (10, sizeof(struct cards));
+struct cards *dealerHand = calloc(10, sizeof(struct cards));
 char names[14] = { '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K',
 		'A' };
 char suits[5] = { 'D', 'H', 'C', 'S' };
@@ -25,6 +30,7 @@ void fillDeck(void);
 void printDeck();
 void shuffleDeck();
 void checkDeck();
+void passCard();
 
 int main(void) {
 	fillDeck();
