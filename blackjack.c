@@ -10,6 +10,14 @@
 #include<time.h>
 #include<alloca.h>
 const int deckSize = 52;
+const int Player = 1;
+const int Dealer = 0;
+int deckCounter = 52;
+int playerHandCounter = 0;
+int dealerHandCounter = 0;
+int scorePlayerHand = 0;
+int checkPlayerHand = 1;
+char userAnswer;
 
 struct cards {
 	char suit[2];
@@ -17,10 +25,8 @@ struct cards {
 	int score;
 };
 struct cards deck[52];
-
-
-struct cards *playerHand = calloc (10, sizeof(struct cards));
-struct cards *dealerHand = calloc(10, sizeof(struct cards));
+struct cards playerHand[10];
+struct cards dealerHand[10];
 char names[14] = { '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K',
 		'A' };
 char suits[5] = { 'D', 'H', 'C', 'S' };
@@ -30,18 +36,28 @@ void fillDeck(void);
 void printDeck();
 void shuffleDeck();
 void checkDeck();
-void passCard();
+void passCard(struct cards *hand, int person);
+void Ask();
+void Choice();
+void PrintHand();
+void CheckHand();
+void getWinner();
 
 int main(void) {
 	fillDeck();
-	printf("----------------------------------------------------\n");
-	printf("%s,%s,%i\n", deck[0].suit, deck[0].name, deck[0].score);
-	printf("----------------------------------------------------\n");
-	printf("----------------------------------------------------\n");
-	/*printDeck();*/
 	shuffleDeck();
-	printDeck();
-	checkDeck();
+	passCard(playerHand, Player);
+	passCard(playerHand, Player);
+	PrintHand();
+	printf("You score is (%i).        ", scorePlayerHand);
+	do {
+		CheckHand();
+		Ask();
+		Choice();
+		PrintHand();
+		printf("You score is (%i).    ", scorePlayerHand);
+	} while ((userAnswer == 'y' || userAnswer == 'Y'));
+	getWinner();
 	return 0;
 }
 void fillDeck() {
@@ -75,7 +91,7 @@ void printDeck() {
 		printf("%s , %s , %i \n", deck[index].name, deck[index].suit,
 				deck[index].score);
 		printf("----------------------------------------------------\n");
-		printf("%i Crads in Deck\n", index);
+		printf("%i Cards in Deck\n", index);
 		printf("----------------------------------------------------\n");
 
 	}
@@ -84,8 +100,7 @@ void shuffleDeck() {
 	int shuffletime, index1, index2, counter;
 	struct cards container;
 	srand(time(NULL));
-	shuffletime = (rand() % 100000);
-	printf("%i\n", shuffletime);
+	shuffletime = (rand() % 10000);
 	for (counter = 0; counter < shuffletime; counter++) {
 		index1 = (rand() % 52);
 		index2 = (rand() % 52);
@@ -122,3 +137,101 @@ void checkDeck() {
 	printf("The number of cards with you score is %i\n", scorecounter);
 
 }
+void passCard(struct cards *hand, int person) {
+	int size = 0;
+	struct cards tempContainer[1];
+	size = deckCounter - 1;
+	if (person == 1) {
+		tempContainer[0] = deck[size];
+		playerHand[playerHandCounter] = tempContainer[0];
+		playerHandCounter = playerHandCounter + 1;
+	} else {
+		tempContainer[0] = deck[size];
+		dealerHand[dealerHandCounter] = tempContainer[0];
+		dealerHandCounter = dealerHandCounter + 1;
+	}
+	deckCounter = size;
+
+}
+void Ask() {
+	printf("       Do you want another card ? TYpe Y or N ");
+	scanf("%s", &userAnswer);
+}
+
+void Choice() {
+	if (userAnswer == 'y' || userAnswer == 'Y') {
+		passCard(playerHand, Player);
+	}
+}
+
+void PrintHand() {
+	int index = 0;
+	int temp = 0;
+	int scores = 0;
+	for (index = 0; index < playerHandCounter; index++) {
+		printf("----------------------------------------------------\n");
+		printf("%s , %s , %i \n", playerHand[index].name,
+				playerHand[index].suit, playerHand[index].score);
+		printf("----------------------------------------------------\n");
+		printf("----------------------------------------------------\n");
+		temp = playerHand[index].score;
+		scores = scores + temp;
+		scorePlayerHand = scores;
+	}
+}
+void CheckHand() {
+	int index = 0;
+	int temp = 0;
+	for (index = 0; index < playerHandCounter; index++) {
+		temp = playerHand[index].score;
+		scorePlayerHand = scorePlayerHand + temp;
+	}
+}
+
+void getWinner() {
+	int index = 0;
+	int temp = 0;
+	int score = 0;
+	int checkdeal;
+
+	do {
+		passCard(dealerHand, Dealer);
+		temp = dealerHand[index].score;
+		score = score + temp;
+		index = index + 1;
+
+	} while (score <= 17);
+	if (score > 21) {
+		checkdeal = 0;
+	} else {
+		checkdeal = 1;
+	}
+	if (scorePlayerHand > 21) {
+		checkPlayerHand = 0;
+	} else {
+		checkPlayerHand = 1;
+	}
+	if (checkdeal < checkPlayerHand) {
+		printf("You win!!! You score is %i   Dealer score is %i \n", scorePlayerHand,
+				score);
+	}
+	if (checkdeal > checkPlayerHand) {
+		printf("You Loose!!! You score is %i   Dealer score is %i \n",
+				scorePlayerHand, score);
+	}
+	if ((checkdeal == checkPlayerHand) && (checkdeal == 1)) {
+		if (score > scorePlayerHand) {
+			printf("You Loose!!! You score is %i   Dealer score is %i \n",
+					scorePlayerHand, score);
+		} else {
+			printf("You win!!! You score is %i   Dealer score is %i \n",
+					scorePlayerHand, score);
+		}
+	}
+	if ((checkdeal == checkPlayerHand) && (checkdeal == 0)) {
+		printf("Nobody win!!! You score is %i   Dealer score is %i \n",
+				scorePlayerHand, score);
+	}
+
+}
+
